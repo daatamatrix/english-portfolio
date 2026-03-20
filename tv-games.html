@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stand Games — TV</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: #0d0d1a;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  font-family: 'Bebas Neue', sans-serif;
+  position: relative;
+}
+
+/* Grid bg */
+body::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* Accent bars */
+.bar-top {
+  position:absolute; top:0; left:0; right:0; height:6px;
+  background: linear-gradient(90deg, #1e88e5, #7b1fa2, #e65100, #fbc02d, #1e88e5);
+  background-size: 300%;
+  animation: barSlide 5s linear infinite;
+  z-index:10;
+}
+.bar-bottom {
+  position:absolute; bottom:0; left:0; right:0; height:4px;
+  background: linear-gradient(90deg, #fbc02d, #e65100, #7b1fa2, #1e88e5, #fbc02d);
+  background-size: 300%;
+  animation: barSlide 5s linear infinite reverse;
+  z-index:10;
+}
+@keyframes barSlide { 0%{background-position:0%} 100%{background-position:300%} }
+
+/* Layout */
+.layout {
+  position:relative; z-index:1;
+  width:100%; height:100%;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap:0;
+  padding: 50px 80px 50px 80px;
+  align-items: center;
+}
+
+/* LEFT */
+.left {
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding-right: 60px;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+.eyebrow {
+  font-family:'IBM Plex Mono', monospace;
+  font-size:18px;
+  letter-spacing:6px;
+  color:rgba(255,255,255,0.4);
+  text-transform:uppercase;
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.eyebrow-dot {
+  width:10px; height:10px;
+  border-radius:50%;
+  background:#fff;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(0.7)} }
+
+.main-title {
+  font-size: 180px;
+  line-height: 0.88;
+  letter-spacing: 4px;
+  margin-bottom: 36px;
+  animation: titleBreath 4s ease-in-out infinite;
+}
+
+.main-title .line1 { color: #fff; display:block; }
+.main-title .line2 {
+  display:block;
+  background: linear-gradient(135deg, #1e88e5, #7b1fa2, #e65100);
+  background-size: 200%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation: gradShift 4s linear infinite;
+}
+
+@keyframes titleBreath {
+  0%,100%{ filter:brightness(1); }
+  50%{ filter:brightness(1.15); }
+}
+@keyframes gradShift {
+  0%{background-position:0%}
+  100%{background-position:200%}
+}
+
+.hook {
+  font-size: 44px;
+  letter-spacing: 2px;
+  line-height: 1.15;
+  margin-bottom: 40px;
+}
+
+.hook span {
+  display:block;
+  opacity:0;
+  transform:translateX(-30px);
+  animation: slideIn 0.7s ease forwards;
+}
+.hook span:nth-child(1){ animation-delay:0.3s; color:#fff; }
+.hook span:nth-child(2){ animation-delay:0.6s; color:#fff; }
+.hook span:nth-child(3){ animation-delay:0.9s; color:#fbc02d; }
+
+@keyframes slideIn {
+  to{ opacity:1; transform:translateX(0); }
+}
+
+/* Pulsing CTA */
+.cta {
+  display:inline-flex;
+  align-items:center;
+  gap:16px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius:50px;
+  padding: 16px 36px;
+  width: fit-content;
+}
+
+.cta-dot {
+  width:14px; height:14px;
+  border-radius:50%;
+  background:#4caf50;
+  animation: ctaPulse 1.5s ease-in-out infinite;
+  flex-shrink:0;
+}
+
+@keyframes ctaPulse {
+  0%,100%{ box-shadow: 0 0 0 0 rgba(76,175,80,0.6); }
+  50%{ box-shadow: 0 0 0 10px rgba(76,175,80,0); }
+}
+
+.cta-text {
+  font-family:'IBM Plex Mono', monospace;
+  font-size:18px;
+  letter-spacing:3px;
+  color:rgba(255,255,255,0.8);
+  text-transform:uppercase;
+}
+
+/* RIGHT — game cards */
+.right {
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding-left: 60px;
+}
+
+.game-card {
+  border-radius: 20px;
+  padding: 32px 28px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  position:relative;
+  overflow:hidden;
+  opacity:0;
+  transform: translateY(20px);
+  animation: cardIn 0.6s ease forwards;
+  transition: transform 0.3s;
+}
+
+.game-card:nth-child(1){ animation-delay:0.4s; }
+.game-card:nth-child(2){ animation-delay:0.6s; }
+.game-card:nth-child(3){ animation-delay:0.8s; }
+.game-card:nth-child(4){ animation-delay:1.0s; }
+
+@keyframes cardIn {
+  to{ opacity:1; transform:translateY(0); }
+}
+
+.game-card.cp {
+  background: linear-gradient(135deg, rgba(30,136,229,0.2), rgba(21,101,192,0.3));
+  border: 1px solid rgba(30,136,229,0.4);
+}
+.game-card.bd {
+  background: linear-gradient(135deg, rgba(230,81,0,0.2), rgba(191,54,12,0.3));
+  border: 1px solid rgba(230,81,0,0.4);
+}
+.game-card.ms {
+  background: linear-gradient(135deg, rgba(123,31,162,0.2), rgba(74,20,140,0.3));
+  border: 1px solid rgba(123,31,162,0.4);
+}
+.game-card.bt {
+  background: linear-gradient(135deg, rgba(251,192,45,0.15), rgba(245,127,23,0.25));
+  border: 1px solid rgba(251,192,45,0.4);
+}
+
+/* Animated glow blob per card */
+.game-card::before {
+  content:'';
+  position:absolute;
+  width:180px; height:180px;
+  border-radius:50%;
+  top:-40px; right:-40px;
+  opacity:0.12;
+  animation: blobPulse 3s ease-in-out infinite;
+}
+.game-card.cp::before  { background:#1e88e5; }
+.game-card.bd::before  { background:#e65100; }
+.game-card.ms::before  { background:#7b1fa2; }
+.game-card.bt::before  { background:#fbc02d; }
+
+@keyframes blobPulse {
+  0%,100%{ transform:scale(1); opacity:0.12; }
+  50%{ transform:scale(1.3); opacity:0.2; }
+}
+
+.game-icon { font-size: 52px; line-height:1; }
+
+.game-name {
+  font-size: 52px;
+  letter-spacing:2px;
+  line-height:1;
+}
+
+.game-card.cp .game-name { color:#64b5f6; }
+.game-card.bd .game-name { color:#ff8a65; }
+.game-card.ms .game-name { color:#ce93d8; }
+.game-card.bt .game-name { color:#fdd835; }
+
+.game-desc {
+  font-family:'IBM Plex Mono', monospace;
+  font-size:14px;
+  letter-spacing:1px;
+  line-height:1.6;
+  color:rgba(255,255,255,0.55);
+}
+
+.game-players {
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12px;
+  letter-spacing:2px;
+  color:rgba(255,255,255,0.3);
+  text-transform:uppercase;
+  margin-top:auto;
+}
+
+/* Floating particles */
+.particle {
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+  opacity:0;
+  animation: floatUp linear infinite;
+  z-index:0;
+}
+
+@keyframes floatUp {
+  0%{ opacity:0; transform:translateY(0) scale(0); }
+  10%{ opacity:0.6; transform:translateY(-20px) scale(1); }
+  90%{ opacity:0.3; }
+  100%{ opacity:0; transform:translateY(-300px) scale(0.5); }
+}
+</style>
+</head>
+<body>
+
+<div class="bar-top"></div>
+<div class="bar-bottom"></div>
+
+<div class="layout">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="eyebrow">
+      <div class="eyebrow-dot"></div>
+      feria de matemáticas · stand interactivo
+    </div>
+
+    <div class="main-title">
+      <span class="line1">STAND</span>
+      <span class="line2">GAMES</span>
+    </div>
+
+    <div class="hook">
+      <span>¿TE ATREVES A</span>
+      <span>COMPETIR CONTRA</span>
+      <span>TUS COMPAÑEROS?</span>
+    </div>
+
+    <div class="cta">
+      <div class="cta-dot"></div>
+      <span class="cta-text">Ven · Juega · Gana · Entra al ranking</span>
+    </div>
+  </div>
+
+  <!-- RIGHT — Game cards -->
+  <div class="right">
+
+    <div class="game-card cp">
+      <div class="game-icon">🔵</div>
+      <div class="game-name">CIRCLE POP</div>
+      <div class="game-desc">Toca los círculos<br>lo más rápido que puedas</div>
+      <div class="game-players">👤 1 jugador · 30 seg</div>
+    </div>
+
+    <div class="game-card bd">
+      <div class="game-icon">🟠</div>
+      <div class="game-name">BALL DROP</div>
+      <div class="game-desc">No dejes caer<br>la pelota al suelo</div>
+      <div class="game-players">👤 1 jugador · 40 seg</div>
+    </div>
+
+    <div class="game-card ms">
+      <div class="game-icon">🟣</div>
+      <div class="game-name">MEMORY SPHERES</div>
+      <div class="game-desc">Memoriza los colores<br>y repite la secuencia</div>
+      <div class="game-players">👤 1 jugador · memoria</div>
+    </div>
+
+    <div class="game-card bt">
+      <div class="game-icon">🟡</div>
+      <div class="game-name">BUBBLE TENNIS</div>
+      <div class="game-desc">Dos jugadores,<br>una pelota, cero errores</div>
+      <div class="game-players">👥 2 jugadores · vidas</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Floating particles
+const colors = ['#1e88e5','#7b1fa2','#e65100','#fbc02d','#4caf50','#ef5350'];
+for (let i = 0; i < 28; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const size = 6 + Math.random() * 10;
+  p.style.cssText = `
+    width:${size}px; height:${size}px;
+    left:${Math.random()*100}%;
+    bottom:${Math.random()*20}%;
+    background:${colors[Math.floor(Math.random()*colors.length)]};
+    animation-duration:${4 + Math.random()*6}s;
+    animation-delay:${Math.random()*6}s;
+  `;
+  document.body.appendChild(p);
+}
+
+// Cycle hook text every 6 seconds
+const hooks = [
+  ['¿TE ATREVES A', 'COMPETIR CONTRA', 'TUS COMPAÑEROS?'],
+  ['TU NOMBRE', 'EN EL RANKING', '— ¿PUEDES LOGRARLO?'],
+  ['4 JUEGOS.', 'UN GANADOR.', '¿SERÁS TÚ?'],
+  ['DEMUESTRA', 'DE QUÉ', 'ERES CAPAZ.'],
+];
+let hookIdx = 0;
+const hookEl = document.querySelector('.hook');
+
+setInterval(() => {
+  hookIdx = (hookIdx + 1) % hooks.length;
+  const lines = hooks[hookIdx];
+  hookEl.innerHTML = lines.map((l, i) =>
+    `<span style="animation-delay:${i*0.25}s">${l}</span>`
+  ).join('');
+}, 5000);
+</script>
+</body>
+</html>
